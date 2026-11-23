@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RiyalCoin Wallet</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img src="logo.svg" alt="" width="28" height="28">
+  <h1>RiyalCoin</h1>
+  <span id="netBadge" class="badge"></span>
+  <button id="langBtn" class="ghost" type="button">EN</button>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<main>
+  <section id="page-home" class="page">
+    <div class="card balance">
+      <div class="muted" data-i18n="balance"></div>
+      <div class="amount"><span id="bal">—</span> <small>RYL</small></div>
+      <div class="muted small" id="syncLine"></div>
+    </div>
+    <div class="grid2">
+      <button class="primary" data-go="send" data-i18n="send" type="button"></button>
+      <button class="secondary" data-go="receive" data-i18n="receive" type="button"></button>
+    </div>
+    <div class="card">
+      <div class="row"><span data-i18n="peers"></span><b id="peers">0</b></div>
+      <div class="row"><span data-i18n="height"></span><b id="height">0</b></div>
+    </div>
+  </section>
+
+  <section id="page-receive" class="page" hidden>
+    <div class="card">
+      <h2 data-i18n="receive"></h2>
+      <p class="muted small" data-i18n="receiveHint"></p>
+      <canvas id="qr" class="qr" width="0" height="0"></canvas>
+      <div id="addr" class="mono box" dir="ltr">—</div>
+      <div class="grid2">
+        <button id="copyAddr" class="secondary" type="button" data-i18n="copy"></button>
+        <button id="newAddr" class="primary" type="button" data-i18n="newAddr"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-send" class="page" hidden>
+    <form id="sendForm" class="card" autocomplete="off">
+      <h2 data-i18n="send"></h2>
+      <label><span data-i18n="toAddr"></span>
+        <input id="toAddr" class="mono" dir="ltr" spellcheck="false" autocapitalize="off" autocorrect="off" required>
+      </label>
+      <button id="scanBtn" class="secondary full" type="button" data-i18n="scan"></button>
+      <label><span data-i18n="amount"></span>
+        <input id="sendAmt" dir="ltr" inputmode="decimal" placeholder="0.0" required>
+      </label>
+      <p class="muted small" data-i18n="feeNote"></p>
+      <button class="primary" type="submit" data-i18n="review"></button>
+      <p id="sendMsg" class="msg"></p>
+    </form>
+  </section>
+
+  <section id="page-history" class="page" hidden>
+    <div class="card">
+      <h2 data-i18n="history"></h2>
+      <ul id="txList" class="list"></ul>
+      <p id="txEmpty" class="muted" data-i18n="noTx" hidden></p>
+    </div>
+  </section>
+
+  <section id="page-settings" class="page" hidden>
+    <div class="card">
+      <h2 data-i18n="network"></h2>
+      <label><span data-i18n="network"></span>
+        <select id="netSel">
+          <option value="mainnet">mainnet</option>
+          <option value="testnet3">testnet3</option>
+          <option value="testnet4">testnet4</option>
+          <option value="signet">signet</option>
+          <option value="regtest">regtest</option>
+        </select>
+      </label>
+      <label><span data-i18n="seeds"></span>
+        <textarea id="seeds" rows="3" dir="ltr" class="mono" placeholder="seed.example.org:19921"></textarea>
+      </label>
+      <button id="saveCfg" class="primary" type="button" data-i18n="saveRestart"></button>
+      <p class="muted small" data-i18n="seedHint"></p>
+    </div>
+    <div class="card">
+      <h2 data-i18n="security"></h2>
+      <div class="row"><span data-i18n="encStatus"></span><b id="encState">—</b></div>
+      <div class="grid2">
+        <button id="encBtn" class="secondary" type="button" data-i18n="encrypt"></button>
+        <button id="lockBtn" class="secondary" type="button" data-i18n="lockNow"></button>
+      </div>
+      <button id="backupBtn" class="secondary full" type="button" data-i18n="backup"></button>
+      <p id="setMsg" class="msg"></p>
+      <label><span data-i18n="restoreLbl"></span>
+        <textarea id="rsText" rows="3" dir="ltr" class="mono" spellcheck="false" autocapitalize="off"></textarea>
+      </label>
+      <button id="restoreBtn" class="secondary full" type="button" data-i18n="restore"></button>
+      <div id="bkBox" hidden>
+        <textarea id="bkText" rows="4" readonly dir="ltr" class="mono"></textarea>
+        <button id="bkCopy" class="secondary full" type="button" data-i18n="copy"></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav id="tabs">
+  <button data-go="home" class="on" type="button" data-i18n="tabHome"></button>
+  <button data-go="send" type="button" data-i18n="tabSend"></button>
+  <button data-go="receive" type="button" data-i18n="tabReceive"></button>
+  <button data-go="history" type="button" data-i18n="tabHistory"></button>
+  <button data-go="settings" type="button" data-i18n="tabSettings"></button>
+</nav>
+
+<dialog id="dlg">
+  <form method="dialog" id="dlgForm">
+    <h3 id="dlgTitle"></h3>
+    <p id="dlgBody" class="mono wrap" dir="ltr"></p>
+    <input id="dlgPass" type="password" autocomplete="off" hidden>
+    <input id="dlgPass2" type="password" autocomplete="off" hidden>
+    <div class="grid2">
+      <button value="cancel" class="secondary" type="button" id="dlgCancel" data-i18n="cancel"></button>
+      <button value="ok" class="primary" type="submit" id="dlgOk" data-i18n="confirm"></button>
+    </div>
+  </form>
+</dialog>
+
+<script src="qr.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
