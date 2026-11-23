@@ -68,14 +68,20 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-            - run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
+            - run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: "wallet/src-tauri -> target"
-      - run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
+      - run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
       - run: npm install
       - run: npm run icons
       - name: Init and build Android
